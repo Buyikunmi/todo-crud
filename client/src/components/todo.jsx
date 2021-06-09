@@ -20,7 +20,7 @@ class Todo extends Component {
       {
         isCompleted: false,
         _id: "60b90dbf00fbf24858928743",
-        desc: "this is bad and ugly",
+        desc: "this is bad and ugl",
       },
       {
         isCompleted: false,
