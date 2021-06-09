@@ -1,6 +1,6 @@
 import http from "./httpService";
 
-const apiURL = `${window.location.origin}/api/todo`;
+const apiURL = "https://todo-crud-back.herokuapp.com/api/todo";
 
 export async function getTodoItems() {
   const { data } = await http.get(apiURL);

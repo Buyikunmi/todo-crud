@@ -16,7 +16,18 @@ import {
 
 class Todo extends Component {
   state = {
-    todoList: [],
+    todoList: [
+      {
+        isCompleted: false,
+        _id: "60b90dbf00fbf24858928743",
+        desc: "this is bad and ugly",
+      },
+      {
+        isCompleted: false,
+        _id: "60c14e795ebe5200157cb2dc",
+        desc: "wow",
+      },
+    ],
     inputValue: "",
     editItem: {},
     editInputValue: "",
