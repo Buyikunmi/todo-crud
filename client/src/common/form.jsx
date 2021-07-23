@@ -4,7 +4,7 @@ const Form = ({ onChange, onSubmit, inputValue }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="form-inline d-flex justify-content-between align-items-center"
+      className="form-inline d-flex justify-content-between align-items-center mt-5"
     >
       <div className="form-group mx-sm-3 mb-2">
         <input

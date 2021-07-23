@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-
+import nProgress from "nprogress";
 import Form from "../common/form";
 import TodoList from "./todoList";
+import "./nprogress.css";
 import {
   getTodoItems,
   addTodoItem,
@@ -13,33 +14,25 @@ import {
 // delete button
 // add button
 // todo list
-
+nProgress.configure({ showSpinner: false });
 class Todo extends Component {
   state = {
-    todoList: [
-      {
-        isCompleted: false,
-        _id: "60b90dbf00fbf24858928743",
-        desc: "this is bad and ugl",
-      },
-      {
-        isCompleted: false,
-        _id: "60c14e795ebe5200157cb2dc",
-        desc: "wow",
-      },
-    ],
+    todoList: [],
     inputValue: "",
     editItem: {},
     editInputValue: "",
+    isLoadedFromAPI: false,
   };
   async componentDidMount() {
     const result = await getTodoItems();
-    this.setState({ todoList: result });
+    this.setState({ todoList: result, isLoadedFromAPI: true });
   }
 
   handleDelete = async (todoItem) => {
+    nProgress.start();
     const result = await deleteTodoItem(todoItem);
     this.setState({ todoList: result });
+    nProgress.done();
   };
 
   handleEdit = (todoItem) => {
@@ -47,9 +40,11 @@ class Todo extends Component {
   };
 
   handleSave = async (todoItem) => {
+    nProgress.start();
     const result = await editTodoItem(this.state.editItem);
     this.setState({ todoList: result, editItem: {}, editInputValue: "" });
-    console.log("saved successfully");
+    nProgress.done();
+    // console.log("saved successfully");
   };
 
   handleTodoItemChange = (event) => {
@@ -74,28 +69,36 @@ class Todo extends Component {
 
   handleOnSubmit = async (e) => {
     e.preventDefault();
+    nProgress.start();
     const newTodoItem = { desc: this.state.inputValue };
     const result = await addTodoItem(newTodoItem);
     this.setState({ todoList: result, inputValue: "" });
+    nProgress.done();
   };
 
   render() {
+    const { isLoadedFromAPI, todoList, inputValue, editItem } = this.state;
     return (
       <div className="container center my-2 col-md-6">
         <Form
-          inputValue={this.state.inputValue}
+          inputValue={inputValue}
           onChange={this.handleOnChange}
           onSubmit={this.handleOnSubmit}
         />
-        <TodoList
-          editItem={this.state.editItem}
-          todoList={this.state.todoList}
-          onCheck={(todoItem) => this.handleCheckBox(todoItem)}
-          onEdit={(todoItem) => this.handleEdit(todoItem)}
-          onSave={(todoItem) => this.handleSave(todoItem)}
-          onChange={this.handleTodoItemChange}
-          onDelete={(todoItem) => this.handleDelete(todoItem)}
-        />
+        {todoList.length !== 0 && (
+          <TodoList
+            editItem={editItem}
+            todoList={todoList}
+            onCheck={(todoItem) => this.handleCheckBox(todoItem)}
+            onEdit={(todoItem) => this.handleEdit(todoItem)}
+            onSave={(todoItem) => this.handleSave(todoItem)}
+            onChange={this.handleTodoItemChange}
+            onDelete={(todoItem) => this.handleDelete(todoItem)}
+          />
+        )}
+        {isLoadedFromAPI && todoList.length === 0 && (
+          <p>There are no items in the todo list</p>
+        )}
       </div>
     );
   }
